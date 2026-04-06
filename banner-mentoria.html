@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banner Mentoria Ser Ter Fazer</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #e0e0e0;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .banner {
+    width: 1600px;
+    height: 400px;
+    background: linear-gradient(135deg, #3E9BEA 0%, #5B9BD5 40%, #F0F7FC 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Elementos decorativos de fundo */
+  .banner::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: 200px;
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 50%;
+  }
+
+  .banner::after {
+    content: '';
+    position: absolute;
+    bottom: -120px;
+    left: 300px;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 50%;
+  }
+
+  /* Hexagonos decorativos */
+  .hex {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    opacity: 0.15;
+  }
+  .hex::before {
+    content: '\u2B22';
+    font-size: 30px;
+    color: white;
+  }
+  .hex-1 { top: 60px; right: 450px; opacity: 0.12; }
+  .hex-2 { top: 160px; right: 350px; opacity: 0.08; }
+  .hex-3 { bottom: 80px; right: 500px; opacity: 0.10; }
+  .hex-4 { top: 40px; left: 600px; opacity: 0.06; }
+  .hex-5 { bottom: 50px; left: 750px; opacity: 0.08; }
+  .hex-6 { top: 100px; right: 550px; opacity: 0.05; }
+
+  /* Linha decorativa vertical */
+  .accent-line {
+    position: absolute;
+    left: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 180px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(240,247,252,0.6));
+    border-radius: 3px;
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    padding-left: 120px;
+    max-width: 1100px;
+  }
+
+  .subtitle-top {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .title {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 6px;
+  }
+
+  .title .mentoria {
+    color: #F0F7FC;
+    display: block;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+  }
+
+  .title .ser-ter-fazer {
+    color: #2D3748;
+    display: block;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+  }
+
+  .divider {
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(to right, #F0F7FC, rgba(240,247,252,0.3));
+    margin: 14px 0;
+    border-radius: 2px;
+  }
+
+  .doctor-info {
+    margin-top: 4px;
+  }
+
+  .doctor-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #F0F7FC;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+  }
+
+  .doctor-title {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.80);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Elemento decorativo lado direito */
+  .right-decoration {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 500px;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .circle-outline {
+    position: absolute;
+    border: 2px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+  }
+
+  .circle-1 {
+    width: 300px;
+    height: 300px;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .circle-2 {
+    width: 200px;
+    height: 200px;
+    right: 100px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .circle-3 {
+    width: 100px;
+    height: 100px;
+    right: 150px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* Padrão de pontos decorativo */
+  .dots-pattern {
+    position: absolute;
+    right: 60px;
+    bottom: 40px;
+    display: grid;
+    grid-template-columns: repeat(5, 12px);
+    gap: 10px;
+    z-index: 1;
+  }
+
+  .dot {
+    width: 5px;
+    height: 5px;
+    background: rgba(45, 55, 72, 0.15);
+    border-radius: 50%;
+  }
+
+  /* Badge/tag decorativa */
+  .badge {
+    position: absolute;
+    right: 80px;
+    top: 40px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.25);
+    z-index: 2;
+  }
+
+  .badge span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #F0F7FC;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Faixa inferior */
+  .bottom-strip {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(to right, #2D3748, #3E9BEA, #5B9BD5, #F0F7FC);
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <!-- Linha decorativa -->
+  <div class="accent-line"></div>
+
+  <!-- Hexagonos -->
+  <div class="hex hex-1"></div>
+  <div class="hex hex-2"></div>
+  <div class="hex hex-3"></div>
+  <div class="hex hex-4"></div>
+  <div class="hex hex-5"></div>
+  <div class="hex hex-6"></div>
+
+  <!-- Conteudo principal -->
+  <div class="content">
+    <div class="subtitle-top">Programa de</div>
+    <h1 class="title">
+      <span class="mentoria">MENTORIA</span>
+      <span class="ser-ter-fazer">SER TER FAZER</span>
+    </h1>
+    <div class="divider"></div>
+    <div class="doctor-info">
+      <div class="doctor-name">Dra. Milena Teles</div>
+      <div class="doctor-title">Endocrinologista | Pesquisadora | Professora | Mentora em IA Aplicada à Medicina</div>
+    </div>
+  </div>
+
+  <!-- Decoracao lado direito -->
+  <div class="right-decoration">
+    <div class="circle-outline circle-1"></div>
+    <div class="circle-outline circle-2"></div>
+    <div class="circle-outline circle-3"></div>
+  </div>
+
+  <!-- Badge -->
+  <div class="badge">
+    <span>Inscreva-se</span>
+  </div>
+
+  <!-- Pontos decorativos -->
+  <div class="dots-pattern">
+    <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+
+  <!-- Faixa inferior -->
+  <div class="bottom-strip"></div>
+</div>
+
+</body>
+</html>
