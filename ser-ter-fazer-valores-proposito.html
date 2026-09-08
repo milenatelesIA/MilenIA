@@ -135,6 +135,21 @@
   .closing p{margin:0 0 12px;line-height:1.6}
   .closing p:last-child{margin:0}
 
+  .book-banner{
+    margin-top:26px;padding:28px 26px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;
+    background:linear-gradient(135deg,var(--gold-pale),#fff 70%);border:1px solid var(--gold);border-left:6px solid var(--gold);
+  }
+  .book-banner .book-info{flex:1 1 280px}
+  .book-banner .book-kicker{margin:0 0 6px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-soft);font-weight:600}
+  .book-banner h3{font-family:var(--serif);font-style:italic;font-weight:700;color:var(--navy);font-size:22px;line-height:1.3;margin:0 0 6px}
+  .book-banner p{margin:0;color:var(--navy-soft);font-size:15px}
+  .book-banner .book-cta{
+    flex:0 0 auto;display:inline-block;padding:13px 24px;background:var(--navy);color:#fff;
+    font-weight:600;text-decoration:none;border-radius:2px;white-space:nowrap;
+  }
+  .book-banner .book-cta:hover{background:var(--navy-soft)}
+  .book-banner .book-cta:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
   .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;padding-top:26px;border-top:1px solid var(--rule)}
   button{font:inherit;font-size:16px;cursor:pointer;padding:12px 20px;border-radius:2px;border:1px solid var(--navy);background:var(--navy);color:#fff}
   button.ghost{background:transparent;color:var(--navy)}
@@ -176,7 +191,7 @@
   /* ---------- impressão ---------- */
   @media print{
     body{background:#fff;font-size:12pt}
-    .topbar,.actions,.cta-block,.msg,.overlay,.retomar{display:none}
+    .topbar,.actions,.cta-block,.msg,.overlay,.retomar,.book-banner{display:none}
     .wrap{max-width:none;padding:0 0 40px}
     header.cover{padding-top:0}
     .q{page-break-inside:avoid}
@@ -401,6 +416,15 @@
     <p>Volte a ele sempre que precisar realinhar suas escolhas ou relembrar o que realmente importa.</p>
   </div>
 
+  <div class="book-banner">
+    <div class="book-info">
+      <p class="book-kicker">Este exercício é do livro</p>
+      <h3>Clareza para ser, organização para ter, coragem para fazer</h3>
+      <p>de Milena Teles — aprofunde-se na leitura completa.</p>
+    </div>
+    <a class="book-cta" href="https://www.amazon.com.br/Clareza-para-Organiza%C3%A7%C3%A3o-Coragem-Fazer-ebook/dp/B0G6DN5CTN" target="_blank" rel="noopener">Ler no Kindle →</a>
+  </div>
+
   <div class="actions">
     <button id="pdf-completo">Baixar PDF completo</button>
     <button id="reset-sempre" class="quiet">Apagar tudo e recomeçar</button>
@@ -408,10 +432,10 @@
   <p class="msg" id="msg-pdf-completo"></p>
 
   <footer>
-    O caderno sempre abre em branco. O que você escreve fica guardado apenas neste dispositivo, e ao voltar você escolhe se quer retomar ou começar do zero. Este é um instrumento de reflexão e conversa na mentoria, não um teste psicométrico validado. Exercício do livro <em><a href="https://www.amazon.com.br/Clareza-para-Organiza%C3%A7%C3%A3o-Coragem-Fazer-ebook/dp/B0G6DN5CTN" target="_blank" rel="noopener">Clareza para ser, organização para ter, coragem para fazer</a></em>, de Milena Teles.
+    O caderno sempre abre em branco. O que você escreve fica guardado apenas neste dispositivo, e ao voltar você escolhe se quer retomar ou começar do zero. Este é um instrumento de reflexão e conversa na mentoria, não um teste psicométrico validado. Exercício do livro <em>Clareza para ser, organização para ter, coragem para fazer</em>, de Milena Teles.
   </footer>
 
-  <div class="print-brand">EssêncIA Médica | @milenageteles</div>
+  <div class="print-brand">EssêncIA Médica | @milenagteles</div>
 </div>
 
 <div class="overlay" id="overlay" hidden>
@@ -872,7 +896,9 @@
      bloqueada e o clique não faz nada. Por isso o PDF agora é montado de
      verdade em JavaScript (biblioteca jsPDF) e entregue ao navegador por
      uma cascata de caminhos, do mais para o menos automático. */
-  const MARCA_RODAPE = 'EssêncIA Médica | @milenageteles';
+  const MARCA_TOPO = 'MENTORIA SER  |  TER  |  FAZER';
+  const MARCA_ESSENCIA = 'EssêncIA Médica';
+  const MARCA_HANDLE = '@milenagteles';
   let carregandoJsPDF = null;
   function carregarJsPDF(){
     if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve(true);
@@ -891,33 +917,62 @@
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit:'pt', format:'a4' });
     const margin = 50;
-    const largura = doc.internal.pageSize.getWidth() - margin*2;
+    const larguraPagina = doc.internal.pageSize.getWidth();
+    const largura = larguraPagina - margin*2;
     const alturaPagina = doc.internal.pageSize.getHeight();
-    let y = margin;
+    const topoConteudo = 78;
+    const baseConteudo = alturaPagina - 62;
+    let y = topoConteudo;
+    let pagina = 1;
 
-    function rodape(){
-      doc.setFont('helvetica','italic');
-      doc.setFontSize(9);
-      doc.setTextColor(140,140,140);
-      doc.text(MARCA_RODAPE, doc.internal.pageSize.getWidth()/2, alturaPagina - 30, {align:'center'});
+    function cabecalho(){
+      doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+      doc.setTextColor(201,168,76);
+      doc.text(MARCA_TOPO, margin, 34);
+      doc.setDrawColor(201,168,76);
+      doc.setLineWidth(1.3);
+      doc.line(margin, 42, margin+largura, 42);
+      doc.setLineWidth(0.5);
     }
+    function rodape(){
+      doc.setDrawColor(217,213,201);
+      doc.setLineWidth(0.5);
+      doc.line(margin, alturaPagina-46, margin+largura, alturaPagina-46);
+      doc.setFont('helvetica','bold'); doc.setFontSize(9);
+      doc.setTextColor(14,27,55);
+      doc.text(MARCA_ESSENCIA, margin, alturaPagina-28);
+      const largEssencia = doc.getTextWidth(MARCA_ESSENCIA);
+      doc.setFont('helvetica','normal'); doc.setTextColor(140,140,140);
+      doc.text(' | ' + MARCA_HANDLE, margin + largEssencia, alturaPagina-28);
+      doc.setFontSize(8.5); doc.setTextColor(140,140,140);
+      doc.text('Página ' + pagina, larguraPagina - margin, alturaPagina-28, {align:'right'});
+    }
+    cabecalho();
+
     function quebrar(altNecessaria){
-      if(y + altNecessaria > alturaPagina - margin - 20){
+      if(y + altNecessaria > baseConteudo){
         rodape();
         doc.addPage();
-        y = margin;
+        pagina++;
+        cabecalho();
+        y = topoConteudo;
       }
     }
     function titulo(txt){
-      doc.setFont('helvetica','bold'); doc.setFontSize(16);
+      doc.setFont('times','bold'); doc.setFontSize(17);
       doc.setTextColor(14,27,55);
       const linhas = doc.splitTextToSize(txt, largura);
-      quebrar(linhas.length*20);
+      quebrar(linhas.length*21 + 10);
       doc.text(linhas, margin, y);
-      y += linhas.length*20 + 10;
+      y += linhas.length*21;
+      doc.setDrawColor(201,168,76);
+      doc.setLineWidth(1.6);
+      doc.line(margin, y+3, margin+70, y+3);
+      doc.setLineWidth(0.5);
+      y += 18;
     }
     function subtitulo(txt){
-      doc.setFont('helvetica','italic'); doc.setFontSize(11);
+      doc.setFont('times','italic'); doc.setFontSize(11.5);
       doc.setTextColor(31,51,87);
       const linhas = doc.splitTextToSize(txt, largura);
       quebrar(linhas.length*15);
