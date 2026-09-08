@@ -392,6 +392,7 @@
       <button id="reset" class="quiet">Apagar tudo</button>
     </div>
     <p class="msg" id="msg-acoes">Copie e cole onde quiser guardar: e-mail, Word, Notion ou uma conversa com IA. Vai junto tudo — as 23 respostas, o termômetro, o resultado, a recomendação e o perfil.</p>
+    <p class="msg" id="msg-pdf-perfil"></p>
   </section>
 
   <div class="closing">
@@ -403,6 +404,7 @@
     <button id="pdf-completo">Baixar PDF completo</button>
     <button id="reset-sempre" class="quiet">Apagar tudo e recomeçar</button>
   </div>
+  <p class="msg" id="msg-pdf-completo"></p>
 
   <footer>
     O caderno sempre abre em branco. O que você escreve fica guardado apenas neste dispositivo, e ao voltar você escolhe se quer retomar ou começar do zero. Este é um instrumento de reflexão e conversa na mentoria, não um teste psicométrico validado. Exercício do livro <em>Clareza para ser, organização para ter, coragem para fazer</em>, de Milena Teles.
@@ -862,23 +864,240 @@
   document.getElementById('reset').addEventListener('click', apagarTudo);
   document.getElementById('reset-sempre').addEventListener('click', apagarTudo);
 
-  /* ---------- gerar PDF (via impressão do navegador) ---------- */
-  function imprimirCompleto(){
-    document.body.classList.remove('so-perfil');
-    window.print();
+  /* ---------- gerar PDF ----------
+     A primeira versão usava window.print(): em ambientes onde este caderno
+     roda dentro de uma janela protegida (o mesmo tipo de restrição que
+     bloqueava o confirm() do "apagar tudo"), a impressão do navegador fica
+     bloqueada e o clique não faz nada. Por isso o PDF agora é montado de
+     verdade em JavaScript (biblioteca jsPDF) e entregue ao navegador por
+     uma cascata de caminhos, do mais para o menos automático. */
+  const MARCA_RODAPE = 'EssêncIA Médica | @milenageteles';
+  let carregandoJsPDF = null;
+  function carregarJsPDF(){
+    if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve(true);
+    if(carregandoJsPDF) return carregandoJsPDF;
+    carregandoJsPDF = new Promise(resolve => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      s.onload = () => resolve(!!(window.jspdf && window.jspdf.jsPDF));
+      s.onerror = () => resolve(false);
+      document.head.appendChild(s);
+    });
+    return carregandoJsPDF;
   }
-  function imprimirPerfil(){
-    document.body.classList.add('so-perfil');
-    const limpar = () => {
-      document.body.classList.remove('so-perfil');
-      window.removeEventListener('afterprint', limpar);
-    };
-    window.addEventListener('afterprint', limpar);
-    window.print();
-    setTimeout(limpar, 2000);
+
+  function criarPdf(){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit:'pt', format:'a4' });
+    const margin = 50;
+    const largura = doc.internal.pageSize.getWidth() - margin*2;
+    const alturaPagina = doc.internal.pageSize.getHeight();
+    let y = margin;
+
+    function rodape(){
+      doc.setFont('helvetica','italic');
+      doc.setFontSize(9);
+      doc.setTextColor(140,140,140);
+      doc.text(MARCA_RODAPE, doc.internal.pageSize.getWidth()/2, alturaPagina - 30, {align:'center'});
+    }
+    function quebrar(altNecessaria){
+      if(y + altNecessaria > alturaPagina - margin - 20){
+        rodape();
+        doc.addPage();
+        y = margin;
+      }
+    }
+    function titulo(txt){
+      doc.setFont('helvetica','bold'); doc.setFontSize(16);
+      doc.setTextColor(14,27,55);
+      const linhas = doc.splitTextToSize(txt, largura);
+      quebrar(linhas.length*20);
+      doc.text(linhas, margin, y);
+      y += linhas.length*20 + 10;
+    }
+    function subtitulo(txt){
+      doc.setFont('helvetica','italic'); doc.setFontSize(11);
+      doc.setTextColor(31,51,87);
+      const linhas = doc.splitTextToSize(txt, largura);
+      quebrar(linhas.length*15);
+      doc.text(linhas, margin, y);
+      y += linhas.length*15 + 6;
+    }
+    function pergunta(txt){
+      doc.setFont('helvetica','bold'); doc.setFontSize(11);
+      doc.setTextColor(14,27,55);
+      const linhas = doc.splitTextToSize(txt, largura);
+      quebrar(linhas.length*14 + 4);
+      doc.text(linhas, margin, y);
+      y += linhas.length*14 + 4;
+    }
+    function texto(txt){
+      doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
+      doc.setTextColor(35,38,46);
+      const linhas = doc.splitTextToSize(txt || '—', largura);
+      quebrar(linhas.length*13 + 12);
+      doc.text(linhas, margin, y);
+      y += linhas.length*13 + 12;
+    }
+    function linha(){
+      quebrar(14);
+      doc.setDrawColor(217,213,201);
+      doc.line(margin, y, margin+largura, y);
+      y += 14;
+    }
+    return { doc, titulo, subtitulo, pergunta, texto, linha, rodape };
   }
-  document.getElementById('pdf-completo').addEventListener('click', imprimirCompleto);
-  document.getElementById('pdf-perfil').addEventListener('click', imprimirPerfil);
+
+  function montarPdfCompleto(ctx){
+    const nome = document.getElementById('nome').value.trim();
+    const data = document.getElementById('data').value.trim();
+    ctx.titulo('Meus valores e propósito — SER | TER | FAZER');
+    if(nome || data) ctx.subtitulo([nome, data].filter(Boolean).join(' · '));
+    ctx.linha();
+
+    fields.forEach(f => {
+      const box = f.closest('.q');
+      let tit;
+      if(box){
+        const n = box.querySelector('.num').textContent;
+        tit = n + '. ' + box.querySelector('.ask').childNodes[0].textContent.trim();
+      } else {
+        tit = 'Meus valores essenciais';
+      }
+      ctx.pergunta(tit);
+      ctx.texto(f.value.trim());
+    });
+
+    if(!faltando().length){
+      const s = scores();
+      ctx.linha();
+      ctx.subtitulo('Termômetro das quatro dimensões (0 a 100)');
+      Object.keys(DIMS).forEach(d => ctx.texto(DIMS[d].nome + ': ' + s[d]));
+    }
+
+    if(ultimoResultado){
+      const r = ultimoResultado;
+      ctx.linha();
+      ctx.subtitulo('Índice de alinhamento: ' + r.media);
+      ctx.texto(r.faixa);
+      ctx.pergunta('Meu resultado — ' + r.diagTitulo);
+      ctx.texto(r.diagTexto);
+      ctx.pergunta('Recomendação — por onde começar');
+      r.acoes.forEach(a => ctx.texto('• ' + a));
+      if(r.passo) ctx.texto('• Hoje — meu primeiro passo: ' + r.passo.split('\n')[0]);
+      ctx.pergunta('Meu perfil: ' + r.perfilNome);
+      ctx.texto(r.perfilTexto);
+      ctx.texto('Ponto de atenção: ' + r.fraca);
+    }
+    return true;
+  }
+
+  function montarPdfPerfil(ctx){
+    if(!ultimoResultado) return false;
+    const r = ultimoResultado;
+    const nome = document.getElementById('nome').value.trim();
+    const data = document.getElementById('data').value.trim();
+    ctx.titulo('Meu perfil — SER | TER | FAZER');
+    if(nome || data) ctx.subtitulo([nome, data].filter(Boolean).join(' · '));
+    ctx.linha();
+    ctx.subtitulo('Índice de alinhamento: ' + r.media);
+    ctx.texto(r.faixa);
+    ctx.pergunta(r.diagTitulo);
+    ctx.texto(r.diagTexto);
+    ctx.pergunta('Por onde começar');
+    r.acoes.forEach(a => ctx.texto('• ' + a));
+    if(r.passo) ctx.texto('• Hoje — meu primeiro passo: ' + r.passo.split('\n')[0]);
+    ctx.pergunta(r.perfilNome);
+    ctx.texto(r.perfilTexto);
+    ctx.texto('Ponto de atenção: ' + r.fraca);
+
+    const q0 = document.getElementById('q0').value.trim();
+    const q6 = document.getElementById('q6').value.trim();
+    const q22 = document.getElementById('q22').value.trim();
+    if(q0){ ctx.pergunta('Meus valores essenciais'); ctx.texto(q0); }
+    if(q6){ ctx.pergunta('Meu propósito'); ctx.texto(q6); }
+    if(q22){ ctx.pergunta('Meu ikigai'); ctx.texto(q22); }
+    return true;
+  }
+
+  /* Cascata de entrega do arquivo: capacidade nativa de download do artefato
+     (quando disponível) → link de download comum do navegador → nova aba
+     como último recurso, para o caderno nunca ficar "sem fazer nada". */
+  async function salvarArquivo(filename, blob){
+    try{
+      if(window.claude && typeof window.claude.use === 'function'){
+        const downloads = await window.claude.use('downloads');
+        if(downloads){
+          await downloads.save({ filename, data: blob });
+          return { ok:true, via:'downloads' };
+        }
+      }
+    }catch(e){ /* segue para o próximo caminho */ }
+
+    try{
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      return { ok:true, via:'link' };
+    }catch(e){ /* segue para o próximo caminho */ }
+
+    try{
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      return { ok:true, via:'aba' };
+    }catch(e){
+      return { ok:false };
+    }
+  }
+
+  async function gerarEBaixarPdf(botaoId, msgId, filename, montar){
+    const botao = document.getElementById(botaoId);
+    const status = document.getElementById(msgId);
+    const textoOriginal = botao.textContent;
+    botao.disabled = true;
+    botao.textContent = 'Gerando PDF…';
+    if(status) status.textContent = '';
+    try{
+      const ok = await carregarJsPDF();
+      if(!ok){
+        if(status) status.textContent = 'Não consegui carregar o gerador de PDF agora. Verifique a conexão e tente de novo.';
+        return;
+      }
+      const ctx = criarPdf();
+      const gerou = montar(ctx);
+      if(gerou === false){
+        if(status) status.textContent = 'Calcule primeiro o seu resultado (botão "Ver meu resultado") para gerar o PDF do perfil.';
+        return;
+      }
+      ctx.rodape();
+      const blob = ctx.doc.output('blob');
+      const resultado = await salvarArquivo(filename, blob);
+      if(!status) return;
+      if(!resultado.ok){
+        status.textContent = 'Não foi possível salvar o PDF automaticamente aqui. Use "Copiar tudo" e gere o PDF a partir do texto (ex.: colando no Word e salvando como PDF).';
+      }else if(resultado.via === 'downloads'){
+        status.textContent = 'PDF pronto — confirme o salvamento na janela que apareceu.';
+      }else if(resultado.via === 'link'){
+        status.textContent = 'PDF baixado.';
+      }else{
+        status.textContent = 'PDF aberto em uma nova aba — use o menu do navegador para salvar.';
+      }
+    } finally {
+      botao.disabled = false;
+      botao.textContent = textoOriginal;
+    }
+  }
+
+  document.getElementById('pdf-completo').addEventListener('click', () => {
+    gerarEBaixarPdf('pdf-completo', 'msg-pdf-completo', 'meus-valores-e-proposito.pdf', montarPdfCompleto);
+  });
+  document.getElementById('pdf-perfil').addEventListener('click', () => {
+    gerarEBaixarPdf('pdf-perfil', 'msg-pdf-perfil', 'meu-perfil-ikigai.pdf', montarPdfPerfil);
+  });
 
   fields.forEach(grow);
   progress();
