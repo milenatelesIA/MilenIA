@@ -1,0 +1,887 @@
+<!--
+  SER | TER | FAZER — Caderno digital: Meus valores e propósito
+  Exercício do livro de Milena Teles
+  "Clareza para ser, organização para ter, coragem para fazer" (p. 30–39)
+  v2 — com termômetro, resultado, recomendação e perfil
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meus valores e propósito — SER | TER | FAZER</title>
+
+<style>
+  :root{
+    --navy:#0E1B37;
+    --navy-soft:#1F3357;
+    --gold:#C9A84C;
+    --gold-pale:#EFE3C0;
+    --paper:#F8F7F3;
+    --ink:#23262E;
+    --rule:#D9D5C9;
+    --ama:#E5C97A;
+    --bom:#DFA692;
+    --mundo:#AFC69A;
+    --pago:#94A4CC;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:Calibri,"Segoe UI",system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:17px;line-height:1.55;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px 96px}
+
+  /* ---------- barra fixa ---------- */
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(248,247,243,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+  .topbar-inner{max-width:720px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:14px}
+  .track{flex:1;height:3px;background:var(--rule);border-radius:2px;overflow:hidden}
+  .fill{display:block;height:100%;width:0%;background:var(--gold);transition:width .35s ease}
+  .count{font-size:13px;color:var(--navy-soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .saved{font-size:13px;color:#7A8471;white-space:nowrap;opacity:0;transition:opacity .3s}
+  .saved.on{opacity:1}
+
+  /* ---------- capa ---------- */
+  header.cover{padding:56px 0 40px;border-bottom:1px solid var(--rule)}
+  .kicker{font-family:var(--serif);font-style:italic;color:var(--navy-soft);font-size:16px;margin:0 0 10px}
+  .kicker b{color:var(--gold);font-style:italic}
+  h1{font-family:var(--serif);font-weight:700;font-style:italic;color:var(--navy);font-size:clamp(32px,7vw,46px);line-height:1.12;margin:0 0 18px}
+  .lede{font-size:18px;color:var(--navy-soft);margin:0 0 26px;max-width:52ch}
+  blockquote{margin:0;padding:18px 22px;background:#fff;border-left:3px solid var(--gold);font-family:var(--serif);font-style:italic;font-size:17px;color:var(--navy);line-height:1.6}
+  .identity{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+  .identity label{flex:1 1 200px;display:block}
+  .identity span{display:block;font-size:13px;color:var(--navy-soft);margin-bottom:5px}
+  .identity input{width:100%;font:inherit;color:var(--ink);padding:8px 0;border:0;border-bottom:1px solid var(--rule);background:transparent}
+  .identity input:focus{outline:none;border-bottom-color:var(--gold)}
+
+  /* ---------- seções ---------- */
+  section{padding-top:46px}
+  h2{font-family:var(--serif);font-weight:700;font-style:italic;color:var(--navy);font-size:27px;line-height:1.2;margin:0 0 6px}
+  .sec-note{color:var(--navy-soft);font-size:16px;margin:0 0 26px;max-width:56ch}
+
+  .q{margin:0 0 34px;position:relative;padding-left:38px}
+  .q .num{position:absolute;left:0;top:1px;font-family:var(--serif);font-style:italic;font-weight:700;color:var(--gold);font-size:20px}
+  .q .ask{font-weight:600;color:var(--navy);margin:0 0 10px;font-size:17px;line-height:1.4}
+  .q .hint{display:block;font-weight:400;color:var(--navy-soft);font-size:15px;margin-top:3px}
+
+  textarea{
+    width:100%;font-family:var(--sans);font-size:17px;line-height:32px;color:var(--ink);
+    padding:4px 12px 0;min-height:132px;border:0;border-radius:0;background-color:#fff;
+    background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--rule) 31px,var(--rule) 32px);
+    background-position:0 4px;resize:none;overflow:hidden;box-shadow:inset 0 0 0 1px #ECE9E0;
+  }
+  textarea:focus{outline:none;box-shadow:inset 0 0 0 1px var(--gold)}
+  textarea::placeholder{color:#B4B0A6}
+
+  .ikigai-block{border-left:4px solid var(--c);padding-left:20px;margin-top:38px}
+  .ikigai-block h3{font-family:var(--serif);font-style:italic;font-weight:700;color:var(--navy);font-size:21px;margin:0 0 4px}
+  .ikigai-block .dim{color:var(--navy-soft);font-size:15px;margin:0 0 22px}
+  #ama{--c:var(--ama)} #bom{--c:var(--bom)} #mundo{--c:var(--mundo)} #pago{--c:var(--pago)}
+
+  figure{margin:30px 0 0;text-align:center}
+  svg{max-width:100%;height:auto}
+  figcaption{font-size:14px;color:var(--navy-soft);margin-top:8px}
+
+  /* ---------- termômetro ---------- */
+  .scale-group{border-left:4px solid var(--c);padding-left:20px;margin-bottom:34px}
+  .scale-group h3{font-family:var(--serif);font-style:italic;font-weight:700;color:var(--navy);font-size:20px;margin:0 0 16px}
+  .anchors{display:flex;justify-content:space-between;font-size:13px;color:#8A8578;margin-bottom:6px}
+  .item{margin-bottom:18px}
+  .stmt{margin:0 0 8px;font-size:16px;color:var(--ink)}
+  .opts{display:flex;gap:6px}
+  .opts label{flex:1;position:relative}
+  .opts input{position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;margin:0;cursor:pointer}
+  .opts span{
+    display:block;text-align:center;padding:11px 0;background:#fff;
+    box-shadow:inset 0 0 0 1px #ECE9E0;color:#8A8578;font-size:15px;
+    transition:background .15s,color .15s;
+  }
+  .opts input:checked + span{background:var(--navy);color:#fff;box-shadow:none}
+  .opts input:focus-visible + span{outline:3px solid var(--gold);outline-offset:2px}
+
+  /* ---------- resultado ---------- */
+  .cta-block{margin-top:12px;padding:26px 24px;background:#fff;box-shadow:inset 0 0 0 1px #ECE9E0;text-align:center}
+  .cta-block p{margin:0 0 16px;color:var(--navy-soft)}
+  #resultado[hidden]{display:none}
+  .bars{margin:24px 0 8px}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .bar-label{flex:0 0 168px;font-size:15px;color:var(--navy)}
+  .bar-track{flex:1;height:14px;background:#EDEAE1}
+  .bar-val{display:block;height:100%;width:0;transition:width .8s cubic-bezier(.22,.9,.3,1)}
+  .bar-num{flex:0 0 42px;text-align:right;font-size:14px;color:var(--navy-soft);font-variant-numeric:tabular-nums}
+  .index{font-family:var(--serif);font-style:italic;color:var(--navy);font-size:20px;margin:22px 0 0}
+  .index b{font-size:34px;font-style:normal;color:var(--gold)}
+
+  .card{background:#fff;box-shadow:inset 0 0 0 1px #ECE9E0;padding:26px 24px;margin-top:26px}
+  .card h3{font-family:var(--serif);font-style:italic;font-weight:700;color:var(--navy);font-size:22px;margin:0 0 12px}
+  .card p{margin:0 0 14px}
+  .card ul{margin:0;padding-left:20px}
+  .card li{margin-bottom:12px}
+  .card li b{color:var(--navy)}
+  .tag{display:inline-block;font-size:13px;color:var(--navy-soft);border:1px solid var(--rule);padding:3px 10px;margin-bottom:14px}
+
+  .perfil{background:var(--navy);color:#EDEDE8;padding:32px 28px;margin-top:26px}
+  .perfil .tag{color:var(--gold-pale);border-color:rgba(255,255,255,.28)}
+  .perfil h3{font-family:var(--serif);font-style:italic;font-weight:700;color:#fff;font-size:30px;margin:0 0 14px;line-height:1.15}
+  .perfil p{margin:0 0 18px;line-height:1.6}
+  .perfil dl{margin:0;border-top:1px solid rgba(255,255,255,.18);padding-top:18px}
+  .perfil dt{font-size:13px;color:var(--gold-pale);margin-bottom:4px}
+  .perfil dd{margin:0 0 16px;white-space:pre-wrap}
+  .perfil dd:last-child{margin-bottom:0}
+
+  .closing{margin-top:48px;padding:26px 24px;background:#fff;box-shadow:inset 0 0 0 1px #ECE9E0}
+  .closing p{margin:0 0 12px;line-height:1.6}
+  .closing p:last-child{margin:0}
+
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;padding-top:26px;border-top:1px solid var(--rule)}
+  button{font:inherit;font-size:16px;cursor:pointer;padding:12px 20px;border-radius:2px;border:1px solid var(--navy);background:var(--navy);color:#fff}
+  button.ghost{background:transparent;color:var(--navy)}
+  button.quiet{background:transparent;color:#8A8578;border-color:var(--rule)}
+  button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .msg{font-size:15px;color:#8A6A22;margin:14px 0 0;min-height:1.2em}
+
+  footer{margin-top:40px;font-size:14px;color:#8A8578;line-height:1.5}
+  footer em{font-style:italic}
+
+  @media (max-width:520px){
+    .bar-label{flex:0 0 100%}
+    .bar-row{flex-wrap:wrap}
+    .bar-track{flex:1 1 auto}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+  /* ---------- aviso de caderno salvo ---------- */
+  .retomar{background:#fff;box-shadow:inset 0 0 0 1px #ECE9E0;border-left:3px solid var(--gold);padding:16px 18px;margin-bottom:28px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+  .retomar[hidden]{display:none}
+  .retomar p{margin:0;font-size:16px;color:var(--navy);flex:1 1 240px}
+  .retomar-acoes{display:flex;gap:10px}
+  .retomar button{padding:9px 16px;font-size:15px}
+
+  /* ---------- painel de cópia / confirmação ---------- */
+  .overlay{position:fixed;inset:0;z-index:50;background:rgba(14,27,55,.55);display:flex;align-items:center;justify-content:center;padding:20px}
+  .overlay[hidden]{display:none}
+  .panel{background:var(--paper);max-width:680px;width:100%;max-height:88vh;display:flex;flex-direction:column;padding:24px;box-shadow:0 18px 50px rgba(14,27,55,.35)}
+  .panel h3{font-family:var(--serif);font-style:italic;font-weight:700;color:var(--navy);font-size:22px;margin:0 0 6px}
+  .panel .hint{font-size:15px;color:var(--navy-soft);margin:0 0 14px}
+  .panel textarea{flex:1 1 auto;min-height:200px;font-size:15px;line-height:1.5;background-image:none;background-color:#fff;padding:12px;overflow:auto;resize:none}
+  .panel .actions{margin-top:16px;padding-top:0;border-top:0}
+  .panel .msg{color:var(--navy-soft)}
+
+  /* ---------- marca da versão impressa / PDF ---------- */
+  .print-brand{display:none}
+
+  /* ---------- impressão ---------- */
+  @media print{
+    body{background:#fff;font-size:12pt}
+    .topbar,.actions,.cta-block,.msg,.overlay,.retomar{display:none}
+    .wrap{max-width:none;padding:0 0 40px}
+    header.cover{padding-top:0}
+    .q{page-break-inside:avoid}
+    textarea{box-shadow:none;border-bottom:1px solid #ccc;background-image:none;line-height:1.5;padding:0;min-height:0}
+    .opts input:checked + span{background:#ddd;color:#000;box-shadow:inset 0 0 0 1px #999}
+    .opts span{box-shadow:inset 0 0 0 1px #ddd}
+    .perfil{background:#fff;color:#000;border:2px solid #0E1B37;page-break-inside:avoid}
+    .perfil h3,.perfil .tag{color:#0E1B37}
+    .perfil dt{color:#555}
+    .card,.closing{box-shadow:none;border:1px solid #ddd;page-break-inside:avoid}
+    .print-brand{
+      display:block;position:fixed;left:0;right:0;bottom:0;
+      text-align:center;font-family:var(--serif);font-style:italic;
+      color:#555;font-size:9pt;padding:6px 0;border-top:1px solid #ccc;background:#fff;
+    }
+  }
+  /* imprimir só o perfil */
+  body.so-perfil .cover,
+  body.so-perfil #caderno,
+  body.so-perfil #termometro,
+  body.so-perfil .closing,
+  body.so-perfil #bars-wrap,
+  body.so-perfil #diagnostico,
+  body.so-perfil #recomendacao{display:none}
+</style>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="track"><span class="fill" id="fill"></span></div>
+    <span class="count" id="count">0 de 23</span>
+    <span class="saved" id="saved">salvo</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="cover">
+    <div class="retomar" id="retomar" hidden>
+      <p>Há um caderno salvo neste dispositivo. Quer continuar de onde parou?</p>
+      <div class="retomar-acoes">
+        <button id="retomar-sim">Continuar</button>
+        <button id="retomar-nao" class="quiet">Começar do zero</button>
+      </div>
+    </div>
+    <p class="kicker">Mentoria SER | TER | FAZER · Pilar <b>SER</b></p>
+    <h1>Meus valores e propósito</h1>
+    <p class="lede">Um convite ao autoconhecimento: descubra o que realmente importa para você.</p>
+    <blockquote>Conhecer seus valores e propósito é o ponto de partida para uma organização verdadeiramente transformadora. É isso que transforma técnicas em estilo de vida.</blockquote>
+    <div class="identity">
+      <label><span>Nome</span><input id="nome" type="text" placeholder="Seu nome"></label>
+      <label><span>Data</span><input id="data" type="text" placeholder="dd/mm/aaaa"></label>
+    </div>
+  </header>
+
+  <div id="caderno">
+
+  <section>
+    <h2>Meus valores essenciais</h2>
+    <p class="sec-note">Quais princípios orientam suas escolhas? Liste abaixo seus valores mais importantes — um por linha.</p>
+    <textarea id="q0" data-q placeholder="Um valor por linha"></textarea>
+  </section>
+
+  <section>
+    <h2>Perguntas para reflexão profunda</h2>
+    <p class="sec-note">Responda sem pressa e sem editar o que sente. A primeira resposta costuma ser a mais honesta.</p>
+
+    <div class="q"><span class="num">1</span><p class="ask">Quais são meus princípios inegociáveis?</p><textarea id="q1" data-q></textarea></div>
+    <div class="q"><span class="num">2</span><p class="ask">Onde quero chegar? Qual futuro desejo construir?</p><textarea id="q2" data-q></textarea></div>
+    <div class="q"><span class="num">3</span><p class="ask">Como me vejo quando imagino uma vida plena, equilibrada e bem-sucedida?</p><textarea id="q3" data-q></textarea></div>
+    <div class="q"><span class="num">4</span><p class="ask">Qual é o meu dia ideal?<span class="hint">Descreva desde o momento em que acorda até adormecer.</span></p><textarea id="q4" data-q></textarea></div>
+    <div class="q"><span class="num">5</span><p class="ask">Quais objetivos desejo alcançar nos próximos 1, 3 e 5 anos?</p><textarea id="q5" data-q></textarea></div>
+    <div class="q"><span class="num">6</span><p class="ask">Qual é o meu propósito? Qual é a contribuição única que ofereço ao mundo?</p><textarea id="q6" data-q></textarea></div>
+    <div class="q"><span class="num">7</span><p class="ask">Como posso me apresentar de forma que reflita minha identidade e propósito?</p><textarea id="q7" data-q></textarea></div>
+    <div class="q"><span class="num">8</span><p class="ask">O que é inegociável para mim, mas pode ser irrelevante para outras pessoas?</p><textarea id="q8" data-q></textarea></div>
+    <div class="q"><span class="num">9</span><p class="ask">Qual o propósito de buscar organização na minha vida?</p><textarea id="q9" data-q></textarea></div>
+  </section>
+
+  <section>
+    <h2>Descobrindo seu ikigai</h2>
+    <p class="sec-note">O ikigai é o conceito japonês que representa a razão de ser, aquilo que dá sentido à vida. Ele está na interseção de quatro elementos: o que você ama, o que você faz bem, do que o mundo precisa e pelo que você pode ser pago.</p>
+
+    <figure>
+      <svg viewBox="0 0 500 560" role="img" aria-label="Diagrama do ikigai: quatro círculos sobrepostos — o que você ama, no que você é bom, do que o mundo precisa e pelo que você pode ser pago — com o ikigai no centro.">
+        <g style="mix-blend-mode:multiply">
+          <circle cx="250" cy="170" r="118" fill="var(--ama)" opacity=".8"/>
+          <circle cx="160" cy="290" r="118" fill="var(--bom)" opacity=".8"/>
+          <circle cx="340" cy="290" r="118" fill="var(--mundo)" opacity=".8"/>
+          <circle cx="250" cy="410" r="118" fill="var(--pago)" opacity=".8"/>
+        </g>
+        <circle cx="250" cy="290" r="54" fill="#F8F7F3"/>
+        <text x="250" y="297" text-anchor="middle" font-family="Georgia,serif" font-size="21" font-weight="700" fill="#0E1B37">IKIGAI</text>
+        <g font-family="Calibri,system-ui,sans-serif" font-size="14" fill="#23262E" text-anchor="middle">
+          <text x="250" y="150">O que</text><text x="250" y="168">você ama</text>
+          <text x="128" y="284">No que</text><text x="128" y="302">você é bom</text>
+          <text x="372" y="284">Do que</text><text x="372" y="302">o mundo precisa</text>
+          <text x="250" y="418">Pelo que</text><text x="250" y="436">você pode ser pago</text>
+        </g>
+      </svg>
+      <figcaption>As quatro dimensões: paixão, vocação, missão e profissão.</figcaption>
+    </figure>
+
+    <div class="ikigai-block" id="ama">
+      <h3>O que você ama</h3><p class="dim">Sua paixão</p>
+      <div class="q"><span class="num">10</span><p class="ask">O que você faria mesmo que não recebesse nada por isso?</p><textarea id="q10" data-q></textarea></div>
+      <div class="q"><span class="num">11</span><p class="ask">Quais atividades fazem você perder a noção do tempo?</p><textarea id="q11" data-q></textarea></div>
+      <div class="q"><span class="num">12</span><p class="ask">O que te emociona profundamente? Sobre o que você poderia falar por horas sem cansar?</p><textarea id="q12" data-q></textarea></div>
+    </div>
+
+    <div class="ikigai-block" id="bom">
+      <h3>O que você faz bem</h3><p class="dim">Sua vocação</p>
+      <div class="q"><span class="num">13</span><p class="ask">Quais são seus talentos naturais? O que as pessoas costumam elogiar em você?</p><textarea id="q13" data-q></textarea></div>
+      <div class="q"><span class="num">14</span><p class="ask">Quais habilidades você desenvolveu ao longo da vida? Em que área você é reconhecido(a)?</p><textarea id="q14" data-q></textarea></div>
+      <div class="q"><span class="num">15</span><p class="ask">O que você ensina ou poderia ensinar para outras pessoas com facilidade?</p><textarea id="q15" data-q></textarea></div>
+    </div>
+
+    <div class="ikigai-block" id="mundo">
+      <h3>Do que o mundo precisa</h3><p class="dim">Sua missão</p>
+      <div class="q"><span class="num">16</span><p class="ask">Qual problema do mundo te incomoda profundamente e você gostaria de ajudar a resolver?</p><textarea id="q16" data-q></textarea></div>
+      <div class="q"><span class="num">17</span><p class="ask">Como você gostaria de impactar positivamente a vida de outras pessoas?</p><textarea id="q17" data-q></textarea></div>
+      <div class="q"><span class="num">18</span><p class="ask">Que legado você deseja deixar? Como quer ser lembrado(a)?</p><textarea id="q18" data-q></textarea></div>
+    </div>
+
+    <div class="ikigai-block" id="pago">
+      <h3>Pelo que você pode ser pago</h3><p class="dim">Sua profissão</p>
+      <div class="q"><span class="num">19</span><p class="ask">Quais das suas habilidades têm valor de mercado? Pelo que as pessoas pagariam?</p><textarea id="q19" data-q></textarea></div>
+      <div class="q"><span class="num">20</span><p class="ask">Que serviços ou produtos você poderia oferecer utilizando seus talentos?</p><textarea id="q20" data-q></textarea></div>
+      <div class="q"><span class="num">21</span><p class="ask">Como você pode gerar renda fazendo algo que te dá prazer e ajuda outras pessoas?</p><textarea id="q21" data-q></textarea></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Encontrando seu ikigai</h2>
+    <p class="sec-note">Agora, releia suas respostas e busque conexões. Seu ikigai está onde essas quatro dimensões se encontram.</p>
+    <div class="q"><span class="num">22</span><p class="ask">Analisando suas respostas acima, qual atividade ou propósito está na interseção do que você ama, faz bem, o mundo precisa e pelo qual você pode ser pago?</p><textarea id="q22" data-q></textarea></div>
+    <div class="q"><span class="num">23</span><p class="ask">Como você pode integrar seu ikigai na sua rotina atual? Que pequeno passo pode dar hoje?</p><textarea id="q23" data-q></textarea></div>
+  </section>
+
+  </div><!-- /caderno -->
+
+  <section id="termometro">
+    <h2>Termômetro das quatro dimensões</h2>
+    <p class="sec-note">Depois de escrever, meça. Marque o quanto cada frase descreve a sua vida <em>hoje</em> — não a vida que você quer ter. É daqui que sai o seu resultado.</p>
+
+    <div class="scale-group" style="--c:var(--ama)" data-dim="ama">
+      <h3>O que você ama</h3>
+      <div class="anchors"><span>1 · não é assim</span><span>5 · é bem assim</span></div>
+      <div class="item"><p class="stmt">Na maior parte dos meus dias faço pelo menos uma coisa que me dá prazer genuíno.</p><div class="opts" data-name="ama1"></div></div>
+      <div class="item"><p class="stmt">Sei nomear com clareza o que me entusiasma.</p><div class="opts" data-name="ama2"></div></div>
+      <div class="item"><p class="stmt">Minha agenda reserva espaço para o que eu amo, e não só para o que é urgente.</p><div class="opts" data-name="ama3"></div></div>
+    </div>
+
+    <div class="scale-group" style="--c:var(--bom)" data-dim="bom">
+      <h3>O que você faz bem</h3>
+      <div class="anchors"><span>1 · não é assim</span><span>5 · é bem assim</span></div>
+      <div class="item"><p class="stmt">Tenho clareza sobre quais são meus talentos e habilidades mais fortes.</p><div class="opts" data-name="bom1"></div></div>
+      <div class="item"><p class="stmt">Uso meus melhores talentos na maior parte do meu tempo de trabalho.</p><div class="opts" data-name="bom2"></div></div>
+      <div class="item"><p class="stmt">As pessoas me procuram justamente pelo que eu faço bem.</p><div class="opts" data-name="bom3"></div></div>
+    </div>
+
+    <div class="scale-group" style="--c:var(--mundo)" data-dim="mundo">
+      <h3>Do que o mundo precisa</h3>
+      <div class="anchors"><span>1 · não é assim</span><span>5 · é bem assim</span></div>
+      <div class="item"><p class="stmt">Vejo com clareza o impacto do meu trabalho na vida de outras pessoas.</p><div class="opts" data-name="mundo1"></div></div>
+      <div class="item"><p class="stmt">O que faço está conectado a um problema que me importa de verdade.</p><div class="opts" data-name="mundo2"></div></div>
+      <div class="item"><p class="stmt">Sei que legado quero deixar.</p><div class="opts" data-name="mundo3"></div></div>
+    </div>
+
+    <div class="scale-group" style="--c:var(--pago)" data-dim="pago">
+      <h3>Pelo que você pode ser pago</h3>
+      <div class="anchors"><span>1 · não é assim</span><span>5 · é bem assim</span></div>
+      <div class="item"><p class="stmt">Minha renda vem, em boa parte, do que faço bem e gosto de fazer.</p><div class="opts" data-name="pago1"></div></div>
+      <div class="item"><p class="stmt">Meu retorno financeiro é compatível com o valor que entrego.</p><div class="opts" data-name="pago2"></div></div>
+      <div class="item"><p class="stmt">Enxergo caminhos concretos para monetizar meus talentos.</p><div class="opts" data-name="pago3"></div></div>
+    </div>
+
+    <div class="cta-block">
+      <p>Preencha as doze frases acima e veja onde o seu ikigai está firme e onde ele ainda pede atenção.</p>
+      <button id="ver">Ver meu resultado</button>
+      <p class="msg" id="msg"></p>
+    </div>
+  </section>
+
+  <section id="resultado" hidden>
+    <h2>Meu resultado</h2>
+    <p class="sec-note">Quanto de cada dimensão já está presente na sua vida hoje.</p>
+
+    <div id="bars-wrap">
+      <div class="bars" id="bars"></div>
+      <p class="index" id="index"></p>
+    </div>
+
+    <div class="card" id="diagnostico">
+      <span class="tag">Leitura do resultado</span>
+      <h3 id="diag-titulo"></h3>
+      <p id="diag-texto"></p>
+    </div>
+
+    <div class="card" id="recomendacao">
+      <span class="tag">Recomendação prática</span>
+      <h3>Por onde começar</h3>
+      <ul id="rec-lista"></ul>
+    </div>
+
+    <div class="perfil" id="perfil">
+      <span class="tag">Meu perfil</span>
+      <h3 id="perfil-nome"></h3>
+      <p id="perfil-texto"></p>
+      <dl id="perfil-dados"></dl>
+    </div>
+
+    <div class="actions">
+      <button id="copiar-tudo">Copiar tudo</button>
+      <button id="pdf-perfil" class="ghost">Baixar PDF do meu perfil</button>
+      <button id="reset" class="quiet">Apagar tudo</button>
+    </div>
+    <p class="msg" id="msg-acoes">Copie e cole onde quiser guardar: e-mail, Word, Notion ou uma conversa com IA. Vai junto tudo — as 23 respostas, o termômetro, o resultado, a recomendação e o perfil.</p>
+  </section>
+
+  <div class="closing">
+    <p>Ao completar este exercício, você terá em mãos um mapa pessoal — um guia que revela não apenas quem você é hoje, mas quem você está se tornando.</p>
+    <p>Volte a ele sempre que precisar realinhar suas escolhas ou relembrar o que realmente importa.</p>
+  </div>
+
+  <div class="actions">
+    <button id="pdf-completo">Baixar PDF completo</button>
+    <button id="reset-sempre" class="quiet">Apagar tudo e recomeçar</button>
+  </div>
+
+  <footer>
+    O caderno sempre abre em branco. O que você escreve fica guardado apenas neste dispositivo, e ao voltar você escolhe se quer retomar ou começar do zero. Este é um instrumento de reflexão e conversa na mentoria, não um teste psicométrico validado. Exercício do livro <em>Clareza para ser, organização para ter, coragem para fazer</em>, de Milena Teles.
+  </footer>
+
+  <div class="print-brand">EssêncIA Médica | @milenageteles</div>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="painel-titulo">
+    <h3 id="painel-titulo">Tudo o que você escreveu</h3>
+    <p class="hint">Suas 23 respostas, o termômetro, o resultado, a recomendação e o perfil — em um texto só.</p>
+    <textarea id="painel-texto" aria-label="Texto para copiar"></textarea>
+    <div class="actions">
+      <button id="painel-copiar">Copiar</button>
+      <button id="painel-fechar" class="quiet">Fechar</button>
+    </div>
+    <p class="msg" id="painel-msg"></p>
+  </div>
+</div>
+
+<div class="overlay" id="overlay-confirmar" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="confirmar-titulo">
+    <h3 id="confirmar-titulo">Apagar tudo?</h3>
+    <p class="hint">Isso vai apagar todas as respostas, o termômetro e o resultado deste caderno neste dispositivo. Não dá para desfazer.</p>
+    <div class="actions">
+      <button id="confirmar-sim">Sim, apagar tudo</button>
+      <button id="confirmar-nao" class="quiet">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const KEY = 'sertefazer:valores-proposito:v2';
+  const DIMS = {
+    ama:   {nome:'O que você ama',            curto:'paixão',   cor:'var(--ama)'},
+    bom:   {nome:'O que você faz bem',        curto:'talento',  cor:'var(--bom)'},
+    mundo: {nome:'Do que o mundo precisa',    curto:'missão',   cor:'var(--mundo)'},
+    pago:  {nome:'Pelo que você pode ser pago',curto:'sustento',cor:'var(--pago)'}
+  };
+
+  /* ---------- monta as escalas 1–5 ---------- */
+  document.querySelectorAll('.opts').forEach(box => {
+    const name = box.dataset.name;
+    for(let v=1; v<=5; v++){
+      const l = document.createElement('label');
+      l.innerHTML = '<input type="radio" name="'+name+'" value="'+v+'"><span>'+v+'</span>';
+      box.appendChild(l);
+    }
+  });
+
+  const fields = Array.from(document.querySelectorAll('[data-q]'));
+  const meta   = [document.getElementById('nome'), document.getElementById('data')];
+  const radios = Array.from(document.querySelectorAll('.opts input'));
+  const scaleNames = Array.from(new Set(radios.map(r => r.name)));
+  const fill = document.getElementById('fill'), count = document.getElementById('count');
+  const savedTag = document.getElementById('saved'), msg = document.getElementById('msg');
+  let hasStore = !!(window.storage && window.storage.get);
+
+  function grow(el){
+    if(el.tagName !== 'TEXTAREA') return;
+    el.style.height = 'auto';
+    el.style.height = Math.max(132, el.scrollHeight) + 'px';
+  }
+  function progress(){
+    const done = fields.filter(f => f.value.trim()).length;
+    count.textContent = done + ' de ' + fields.length;
+    fill.style.width = (done / fields.length * 100) + '%';
+  }
+  function val(name){
+    const r = radios.find(x => x.name === name && x.checked);
+    return r ? +r.value : 0;
+  }
+  function scores(){
+    const s = {};
+    Object.keys(DIMS).forEach(d => {
+      const raw = val(d+'1') + val(d+'2') + val(d+'3');       // 3–15
+      s[d] = Math.round((raw - 3) / 12 * 100);                 // 0–100
+    });
+    return s;
+  }
+  function faltando(){ return scaleNames.filter(n => !val(n)); }
+
+  function collect(){
+    const data = {campos:{}, escalas:{}};
+    fields.concat(meta).forEach(el => { if(el.value.trim()) data.campos[el.id] = el.value; });
+    scaleNames.forEach(n => { if(val(n)) data.escalas[n] = val(n); });
+    return data;
+  }
+
+  let flashTimer;
+  function flash(){
+    savedTag.classList.add('on');
+    clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => savedTag.classList.remove('on'), 1600);
+  }
+  let saveTimer;
+  function save(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async () => {
+      if(!hasStore) return;
+      try{ await window.storage.set(KEY, JSON.stringify(collect()), false); flash(); }
+      catch(e){
+        hasStore = false;
+        savedTag.textContent = 'não dá para salvar aqui — baixe suas respostas em texto';
+        savedTag.classList.add('on');
+      }
+    }, 600);
+  }
+  /* O caderno SEMPRE abre em branco. Se houver algo salvo neste dispositivo,
+     ele apenas oferece a opção de retomar — nunca preenche por conta própria. */
+  let salvoPendente = null;
+  const avisoRetomar = document.getElementById('retomar');
+
+  function aplicar(data){
+    fields.concat(meta).forEach(el => {
+      if(data.campos && data.campos[el.id]){ el.value = data.campos[el.id]; grow(el); }
+    });
+    if(data.escalas){
+      Object.entries(data.escalas).forEach(([n,v]) => {
+        const r = radios.find(x => x.name === n && +x.value === v);
+        if(r) r.checked = true;
+      });
+    }
+    progress();
+  }
+
+  async function load(){
+    if(!hasStore) return;
+    try{
+      const res = await window.storage.get(KEY, false);
+      if(!res || !res.value) return;
+      const data = JSON.parse(res.value);
+      const temCampos  = data && data.campos  && Object.keys(data.campos).length;
+      const temEscalas = data && data.escalas && Object.keys(data.escalas).length;
+      if(!temCampos && !temEscalas) return;
+      salvoPendente = data;
+      avisoRetomar.hidden = false;
+    }catch(e){ /* caderno novo */ }
+  }
+
+  document.getElementById('retomar-sim').addEventListener('click', () => {
+    if(salvoPendente) aplicar(salvoPendente);
+    salvoPendente = null;
+    avisoRetomar.hidden = true;
+  });
+
+  document.getElementById('retomar-nao').addEventListener('click', async () => {
+    salvoPendente = null;
+    avisoRetomar.hidden = true;
+    if(hasStore){ try{ await window.storage.delete(KEY, false); }catch(e){} }
+  });
+
+  fields.concat(meta).forEach(el => el.addEventListener('input', () => {
+    if(!avisoRetomar.hidden){ avisoRetomar.hidden = true; salvoPendente = null; }
+    grow(el); progress(); save();
+  }));
+  radios.forEach(r => r.addEventListener('change', () => { msg.textContent = ''; save(); }));
+
+  /* ---------- diagnóstico: qual dimensão está mais fraca ---------- */
+  const VAZIOS = {
+    ama: {
+      titulo:'Competente e útil — mas sem o brilho',
+      texto:'Você faz bem, entrega valor e é reconhecida por isso. O que está baixo é o prazer: a vida funciona, mas falta aquilo que faz você perder a noção do tempo. Esse é o vazio mais silencioso, porque de fora tudo parece certo — e é o que mais leva ao esgotamento com o passar dos anos.',
+      acoes:[
+        ['SER','Releia suas respostas 10, 11 e 12 e grife o que se repete. Aí está a pista do que você abandonou pelo caminho.'],
+        ['TER','Bloqueie na agenda duas horas por semana para uma dessas atividades, com o mesmo peso de um compromisso profissional.'],
+        ['FAZER','Nos próximos 30 dias, recuse um compromisso que você já sabe que só drena. Um. Comece por ele.']
+      ]
+    },
+    bom: {
+      titulo:'Entusiasmada — e ainda insegura',
+      texto:'Você sabe o que ama e por que isso importa, mas a confiança na própria competência ainda não acompanhou. Costuma aparecer como sensação de impostora ou como dificuldade de dizer, em voz alta, no que você é boa. O caminho aqui é de evidência e de repetição, não de motivação.',
+      acoes:[
+        ['SER','Pegue sua resposta 13 e pergunte a três pessoas de confiança: "no que você acha que eu sou realmente boa?". Compare com o que você escreveu.'],
+        ['TER','Monte um registro simples de resultados e elogios recebidos. Insegurança se combate com dados, não com discurso.'],
+        ['FAZER','Escolha uma habilidade da resposta 14 e assuma uma entrega concreta com ela nos próximos 60 dias.']
+      ]
+    },
+    mundo: {
+      titulo:'Realizada — com uma sensação de inutilidade',
+      texto:'Você gosta do que faz, faz bem e é paga por isso. O que falta é a linha que liga o seu trabalho a algo maior. Sem essa conexão, o sucesso vira rotina e a pergunta "para que serve tudo isso?" começa a aparecer nos domingos à noite.',
+      acoes:[
+        ['SER','Volte à resposta 18. Escreva o legado em uma frase só, curta o bastante para caber num bilhete.'],
+        ['TER','Escolha um problema da resposta 16 e reserve um espaço fixo, ainda que pequeno, na sua semana para ele.'],
+        ['FAZER','Ensine, escreva ou compartilhe algo do que você sabe para alguém que precisa. Impacto começa em escala pequena.']
+      ]
+    },
+    pago: {
+      titulo:'Cheia de sentido — e sem sustentação',
+      texto:'Sentido, prazer e competência estão presentes; o retorno financeiro é que não acompanha. Esse desequilíbrio costuma ser tolerado por anos em nome do propósito — até virar cansaço e ressentimento. Propósito que não se sustenta financeiramente tem prazo de validade.',
+      acoes:[
+        ['SER','Reveja a resposta 19 sem modéstia. Subestimar o próprio valor é o erro mais comum aqui.'],
+        ['TER','Coloque no papel quanto do seu tempo hoje gera renda e quanto não gera. O número costuma surpreender.'],
+        ['FAZER','Escolha um único serviço ou produto da resposta 20 e defina preço, formato e data para oferecer.']
+      ]
+    }
+  };
+
+  const PERFIS = {
+    'ama+bom':   {nome:'Perfil Paixão',  texto:'Você ama o que faz e faz muito bem. Sua energia vem do próprio trabalho — mas o desafio é transformar esse talento em impacto visível e em retorno justo. Sem isso, a paixão vira hobby caro.'},
+    'ama+mundo': {nome:'Perfil Missão',  texto:'Você tem causa e coração alinhados: sabe o que ama e para quem isso serve. Falta consolidar a técnica e o modelo de sustento, para que a missão não dependa do seu sacrifício pessoal.'},
+    'ama+pago':  {nome:'Perfil Prazer sustentável', texto:'Você conseguiu unir o que gosta ao que paga suas contas — conquista rara. O passo seguinte é aprofundar a excelência e dar ao seu trabalho um destinatário claro, para que ele deixe de ser só bom para você.'},
+    'bom+mundo': {nome:'Perfil Serviço', texto:'Você é competente e útil, e as pessoas contam com você. O risco é a competência virar obrigação: sem prazer e sem retorno proporcional, esse perfil é o que mais se desgasta em silêncio.'},
+    'bom+pago':  {nome:'Perfil Profissão', texto:'Você domina o que faz e é bem recompensada por isso. A carreira está de pé; o que pede atenção é o sentido — reconectar o que você faz ao que te move e a quem isso serve.'},
+    'mundo+pago':{nome:'Perfil Vocação', texto:'Você ocupa um lugar necessário e sustentável, com valor reconhecido pelo mercado. O que falta é o seu prazer nessa equação e a segurança de estar usando seus melhores talentos, e não apenas os mais demandados.'}
+  };
+
+  function nomeCurto(s){
+    const nome = document.getElementById('nome').value.trim();
+    return nome ? nome.split(/\s+/)[0] : '';
+  }
+
+  let ultimoResultado = null;
+
+  function render(){
+    const s = scores();
+    const ordem = Object.keys(DIMS).sort((a,b) => s[b] - s[a]);
+    const forte1 = ordem[0], forte2 = ordem[1], fraca = ordem[3];
+    const media = Math.round(Object.values(s).reduce((a,b) => a+b, 0) / 4);
+
+    // barras
+    const bars = document.getElementById('bars');
+    bars.innerHTML = '';
+    Object.keys(DIMS).forEach(d => {
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML =
+        '<span class="bar-label">' + DIMS[d].nome + '</span>' +
+        '<span class="bar-track"><span class="bar-val" style="background:'+DIMS[d].cor+'"></span></span>' +
+        '<span class="bar-num">' + s[d] + '</span>';
+      bars.appendChild(row);
+      requestAnimationFrame(() => { row.querySelector('.bar-val').style.width = s[d] + '%'; });
+    });
+
+    const faixa = media >= 75 ? 'as quatro dimensões já se sustentam. Seu trabalho agora é de manutenção e refinamento.'
+               : media >= 50 ? 'a base existe e uma dimensão está puxando o conjunto para baixo. É nela que está o seu maior ganho.'
+               : media >= 25 ? 'há material bom, mas ainda disperso. Concentre em uma dimensão de cada vez.'
+               : 'este é um bom ponto de partida — e um ponto honesto. Comece por uma única frente.';
+    document.getElementById('index').innerHTML =
+      'Índice de alinhamento: <b>' + media + '</b><br><span style="font-size:16px">' + faixa + '</span>';
+
+    // diagnóstico
+    const v = VAZIOS[fraca];
+    document.getElementById('diag-titulo').textContent = v.titulo;
+    document.getElementById('diag-texto').textContent =
+      (nomeCurto() ? nomeCurto() + ', ' + v.texto.charAt(0).toLowerCase() + v.texto.slice(1) : v.texto);
+
+    // recomendação
+    const ul = document.getElementById('rec-lista');
+    ul.innerHTML = '';
+    v.acoes.forEach(([pilar, txt]) => {
+      const li = document.createElement('li');
+      li.innerHTML = '<b>' + pilar + '</b> — ' + txt;
+      ul.appendChild(li);
+    });
+    const passo = document.getElementById('q23').value.trim();
+    if(passo){
+      const li = document.createElement('li');
+      li.innerHTML = '<b>Hoje</b> — você mesma escreveu o seu primeiro passo: “' +
+        passo.split('\n')[0].slice(0,180) + '”. Comece por ele.';
+      ul.appendChild(li);
+    }
+
+    // perfil
+    const chave = [forte1, forte2].sort().join('+');
+    const p = PERFIS[chave] || PERFIS['ama+bom'];
+    document.getElementById('perfil-nome').textContent = p.nome;
+    document.getElementById('perfil-texto').textContent =
+      'Suas dimensões mais fortes hoje são ' + DIMS[forte1].nome.toLowerCase() +
+      ' e ' + DIMS[forte2].nome.toLowerCase() + '. ' + p.texto;
+
+    const dl = document.getElementById('perfil-dados');
+    dl.innerHTML = '';
+    const linhas = [
+      ['Meus valores essenciais', document.getElementById('q0').value.trim()],
+      ['Meu propósito', document.getElementById('q6').value.trim()],
+      ['Meu ikigai', document.getElementById('q22').value.trim()],
+      ['Meu primeiro passo', passo],
+      ['Ponto de atenção', DIMS[fraca].nome]
+    ];
+    linhas.forEach(([t, d]) => {
+      if(!d) return;
+      dl.insertAdjacentHTML('beforeend', '<dt>' + t + '</dt><dd></dd>');
+      dl.lastElementChild.textContent = d;
+    });
+    const nome = document.getElementById('nome').value.trim();
+    const data = document.getElementById('data').value.trim();
+    if(nome || data){
+      dl.insertAdjacentHTML('beforeend', '<dt>Registro</dt><dd></dd>');
+      dl.lastElementChild.textContent = [nome, data].filter(Boolean).join(' · ');
+    }
+
+    ultimoResultado = {
+      s: s, media: media, faixa: faixa,
+      diagTitulo: v.titulo, diagTexto: v.texto,
+      acoes: v.acoes.map(a => a[0] + ' — ' + a[1]),
+      passo: passo, fraca: DIMS[fraca].nome,
+      perfilNome: p.nome,
+      perfilTexto: 'Suas dimensões mais fortes hoje são ' + DIMS[forte1].nome.toLowerCase() +
+        ' e ' + DIMS[forte2].nome.toLowerCase() + '. ' + p.texto
+    };
+
+    document.getElementById('resultado').hidden = false;
+    document.getElementById('resultado').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  document.getElementById('ver').addEventListener('click', () => {
+    const faltam = faltando();
+    if(faltam.length){
+      msg.textContent = 'Faltam ' + faltam.length + (faltam.length === 1 ? ' frase' : ' frases') + ' do termômetro para calcular o resultado.';
+      const primeiro = document.querySelector('[name="' + faltam[0] + '"]');
+      if(primeiro) primeiro.closest('.item').scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+    msg.textContent = '';
+    render();
+  });
+
+  /* ---------- exportações ---------- */
+  function textoCompleto(){
+    const nome = document.getElementById('nome').value.trim();
+    const data = document.getElementById('data').value.trim();
+    let out = 'MEUS VALORES E PROPÓSITO — SER | TER | FAZER\n';
+    if(nome) out += 'Nome: ' + nome + '\n';
+    if(data) out += 'Data: ' + data + '\n';
+    out += '\n';
+    fields.forEach(f => {
+      const box = f.closest('.q');
+      let titulo;
+      if(box){
+        const n = box.querySelector('.num').textContent;
+        titulo = n + '. ' + box.querySelector('.ask').childNodes[0].textContent.trim();
+      } else {
+        titulo = 'Meus valores essenciais';
+      }
+      out += titulo + '\n' + (f.value.trim() || '—') + '\n\n';
+    });
+    if(!faltando().length){
+      const s = scores();
+      out += 'TERMÔMETRO (0 a 100)\n';
+      Object.keys(DIMS).forEach(d => { out += DIMS[d].nome + ': ' + s[d] + '\n'; });
+    }
+    if(ultimoResultado){
+      const r = ultimoResultado;
+      out += '\nÍndice de alinhamento: ' + r.media + ' — ' + r.faixa + '\n';
+      out += '\nMEU RESULTADO\n' + r.diagTitulo + '\n' + r.diagTexto + '\n';
+      out += '\nRECOMENDAÇÃO — POR ONDE COMEÇAR\n';
+      r.acoes.forEach(a => { out += '- ' + a + '\n'; });
+      if(r.passo) out += '- Hoje — meu primeiro passo: ' + r.passo.split('\n')[0] + '\n';
+      out += '\nMEU PERFIL: ' + r.perfilNome + '\n' + r.perfilTexto + '\n';
+      out += 'Ponto de atenção: ' + r.fraca + '\n';
+    }
+    return out;
+  }
+
+  /* Copiar tudo — um caminho só, com três camadas de garantia:
+     API moderna, comando antigo e, por último, o texto selecionado na tela. */
+  const overlay     = document.getElementById('overlay');
+  const painelTexto = document.getElementById('painel-texto');
+  const painelMsg   = document.getElementById('painel-msg');
+  let focoAnterior  = null;
+
+  function selecionarTudo(){
+    painelTexto.focus();
+    painelTexto.select();
+    painelTexto.setSelectionRange(0, painelTexto.value.length);
+  }
+
+  async function tentarCopiar(){
+    const texto = painelTexto.value;
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(texto);
+        return true;
+      }
+    }catch(e){ /* segue para o comando antigo */ }
+    try{
+      selecionarTudo();
+      if(document.execCommand('copy')) return true;
+    }catch(e){ /* segue para a cópia manual */ }
+    return false;
+  }
+
+  async function abrirPainel(){
+    focoAnterior = document.activeElement;
+    painelTexto.value = textoCompleto();
+    painelMsg.textContent = '';
+    overlay.hidden = false;
+    selecionarTudo();
+    const ok = await tentarCopiar();
+    selecionarTudo();
+    painelMsg.textContent = ok
+      ? 'Copiado. É só colar no WhatsApp, no e-mail, no Word ou numa conversa com IA.'
+      : 'O texto já está todo selecionado. Use Ctrl+C (Cmd+C no Mac) ou, no celular, segure sobre o texto e toque em Copiar.';
+  }
+
+  function fecharPainel(){
+    overlay.hidden = true;
+    if(focoAnterior) focoAnterior.focus();
+  }
+
+  document.getElementById('copiar-tudo').addEventListener('click', abrirPainel);
+  document.getElementById('painel-copiar').addEventListener('click', async () => {
+    const ok = await tentarCopiar();
+    selecionarTudo();
+    painelMsg.textContent = ok
+      ? 'Copiado.'
+      : 'O texto já está todo selecionado. Use Ctrl+C (Cmd+C no Mac) ou, no celular, segure sobre o texto e toque em Copiar.';
+  });
+  document.getElementById('painel-fechar').addEventListener('click', fecharPainel);
+  overlay.addEventListener('click', e => { if(e.target === overlay) fecharPainel(); });
+
+  /* ---------- confirmação para apagar tudo ----------
+     Antes, o botão usava window.confirm(): em muitos ambientes onde este
+     caderno é aberto (visualizadores embutidos, apps, iframes), a caixa de
+     diálogo nativa do navegador fica bloqueada e confirm() simplesmente não
+     aparece — o clique parecia não fazer nada. Este painel substitui o
+     confirm() nativo por um dentro da própria página, que sempre funciona. */
+  const overlayConfirmar = document.getElementById('overlay-confirmar');
+  let resolverConfirmacao = null;
+
+  function pedirConfirmacao(){
+    return new Promise(resolve => {
+      resolverConfirmacao = resolve;
+      overlayConfirmar.hidden = false;
+      document.getElementById('confirmar-nao').focus();
+    });
+  }
+  function responderConfirmacao(valor){
+    overlayConfirmar.hidden = true;
+    if(resolverConfirmacao){ resolverConfirmacao(valor); resolverConfirmacao = null; }
+  }
+  document.getElementById('confirmar-sim').addEventListener('click', () => responderConfirmacao(true));
+  document.getElementById('confirmar-nao').addEventListener('click', () => responderConfirmacao(false));
+  overlayConfirmar.addEventListener('click', e => { if(e.target === overlayConfirmar) responderConfirmacao(false); });
+
+  document.addEventListener('keydown', e => {
+    if(e.key !== 'Escape') return;
+    if(!overlay.hidden) fecharPainel();
+    if(!overlayConfirmar.hidden) responderConfirmacao(false);
+  });
+
+  async function apagarTudo(){
+    const ok = await pedirConfirmacao();
+    if(!ok) return;
+    fields.concat(meta).forEach(el => { el.value = ''; grow(el); });
+    radios.forEach(r => { r.checked = false; });
+    document.getElementById('resultado').hidden = true;
+    ultimoResultado = null;
+    salvoPendente = null;
+    avisoRetomar.hidden = true;
+    progress();
+    if(hasStore){ try{ await window.storage.delete(KEY, false); }catch(e){} }
+  }
+  document.getElementById('reset').addEventListener('click', apagarTudo);
+  document.getElementById('reset-sempre').addEventListener('click', apagarTudo);
+
+  /* ---------- gerar PDF (via impressão do navegador) ---------- */
+  function imprimirCompleto(){
+    document.body.classList.remove('so-perfil');
+    window.print();
+  }
+  function imprimirPerfil(){
+    document.body.classList.add('so-perfil');
+    const limpar = () => {
+      document.body.classList.remove('so-perfil');
+      window.removeEventListener('afterprint', limpar);
+    };
+    window.addEventListener('afterprint', limpar);
+    window.print();
+    setTimeout(limpar, 2000);
+  }
+  document.getElementById('pdf-completo').addEventListener('click', imprimirCompleto);
+  document.getElementById('pdf-perfil').addEventListener('click', imprimirPerfil);
+
+  fields.forEach(grow);
+  progress();
+  load();
+})();
+</script>
