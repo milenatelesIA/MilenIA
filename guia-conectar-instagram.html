@@ -1,0 +1,235 @@
+<title>Conectar Instagram ao Claude</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: coluna única de leitura; passos numerados em trilha vertical (fluxo), com caixas de alerta só onde há risco */
+:root {
+  --bg: #F3F8FC;
+  --surface: #FFFFFF;
+  --ink: #1F2A37;
+  --muted: #5B6B7C;
+  --line: #D6E4F0;
+  --accent: #2F86D6;
+  --accent-soft: #E3F0FB;
+  --safe: #1E7F5C;
+  --safe-soft: #E2F4EC;
+  --warn: #A3570B;
+  --warn-soft: #FCEFDF;
+  --display: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+  --body: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1720; --surface: #17222E; --ink: #E6EEF6; --muted: #9AABBD; --line: #263646;
+    --accent: #6CB4F2; --accent-soft: #1A3248; --safe: #5CCB9F; --safe-soft: #143328;
+    --warn: #F0AE62; --warn-soft: #3A2814; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1720; --surface: #17222E; --ink: #E6EEF6; --muted: #9AABBD; --line: #263646;
+  --accent: #6CB4F2; --accent-soft: #1A3248; --safe: #5CCB9F; --safe-soft: #143328;
+  --warn: #F0AE62; --warn-soft: #3A2814; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body);
+  font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 64px;
+}
+.wrap { max-width: 680px; margin: 0 auto; display: grid; gap: 32px; }
+header { display: grid; gap: 10px; }
+.eyebrow {
+  font-family: var(--display); font-weight: 700; font-size: 12px;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+}
+h1 {
+  font-family: var(--display); font-weight: 800; font-size: clamp(28px, 6vw, 40px);
+  line-height: 1.12; margin: 0; text-wrap: balance;
+}
+.lede { color: var(--muted); margin: 0; max-width: 60ch; }
+h2 {
+  font-family: var(--display); font-weight: 700; font-size: 20px;
+  margin: 0; text-wrap: balance;
+}
+section { display: grid; gap: 14px; }
+.box {
+  border-radius: 12px; padding: 16px 18px; display: grid; gap: 8px;
+}
+.box p, .box ul { margin: 0; }
+.box ul { padding-left: 20px; display: grid; gap: 4px; }
+.box.before { background: var(--accent-soft); }
+.box.safe { background: var(--safe-soft); }
+.box.safe h2 { color: var(--safe); }
+.box.warn { background: var(--warn-soft); }
+.box.warn strong { color: var(--warn); }
+
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+ol.steps > li {
+  display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px;
+  position: relative; padding-bottom: 28px;
+}
+ol.steps > li:last-child { padding-bottom: 0; }
+ol.steps > li:not(:last-child)::before {
+  content: ""; position: absolute; left: 19px; top: 40px; bottom: 0;
+  width: 2px; background: var(--line);
+}
+.num {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--accent); color: var(--surface);
+  font-family: var(--display); font-weight: 800; font-size: 17px;
+  display: grid; place-items: center;
+}
+.step-body { display: grid; gap: 8px; min-width: 0; padding-top: 6px; }
+.step-body h3 { font-family: var(--display); font-weight: 700; font-size: 17px; margin: 0; }
+.step-body p { margin: 0; }
+.step-body ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.path { font-weight: 600; }
+
+.prompt {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 12px;
+}
+.prompt code { font-family: var(--mono); font-size: 14px; flex: 1 1 200px; min-width: 0; overflow-wrap: anywhere; }
+button.copy {
+  font: 600 13px var(--body); color: var(--accent); background: var(--accent-soft);
+  border: 0; border-radius: 8px; padding: 6px 12px; cursor: pointer;
+}
+button.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.perms { display: grid; gap: 6px; padding: 0; margin: 0; list-style: none; }
+.perms li {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 12px; font-size: 15px;
+}
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--display); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 18px; }
+footer strong { color: var(--ink); font-family: var(--display); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Mentoria LIFE · Pilar TER</span>
+    <h1>Como conectar o seu Instagram ao Claude</h1>
+    <p class="lede">Com a conta conectada, o Claude passa a ler as métricas reais dos seus posts e Reels e pode publicar conteúdo, sempre pedindo a sua aprovação antes. A conexão leva cerca de 5 minutos.</p>
+  </header>
+
+  <div class="box before">
+    <h2>Antes de começar</h2>
+    <ul>
+      <li>Seu Instagram precisa ser uma <strong>conta profissional</strong> (Criador de conteúdo ou Empresa). Para conferir no app: <span class="path">Configurações → Tipo de conta e ferramentas</span>. Contas pessoais não conectam.</li>
+      <li>Tenha uma conta no <strong>vidIQ</strong>. O plano gratuito serve para começar; algumas análises consomem créditos.</li>
+    </ul>
+  </div>
+
+  <section>
+    <h2>Passo a passo</h2>
+    <ol class="steps">
+      <li>
+        <span class="num" aria-hidden="true">1</span>
+        <div class="step-body">
+          <h3>Ative o vidIQ no Claude</h3>
+          <p>Em claude.ai, abra <span class="path">Configurações → Conectores</span>, procure <strong>vidIQ</strong>, clique em <strong>Conectar</strong> e faça login na sua conta vidIQ.</p>
+        </div>
+      </li>
+      <li>
+        <span class="num" aria-hidden="true">2</span>
+        <div class="step-body">
+          <h3>Peça a conexão na conversa</h3>
+          <p>Abra uma conversa com o Claude e escreva:</p>
+          <div class="prompt">
+            <code id="prompt-text">Conecte meu Instagram ao vidIQ.</code>
+            <button class="copy" id="copy-btn" type="button">Copiar</button>
+          </div>
+          <p>O Claude responde com um link de autorização. Ele é de uso único e pessoal: não compartilhe.</p>
+        </div>
+      </li>
+      <li>
+        <span class="num" aria-hidden="true">3</span>
+        <div class="step-body">
+          <h3>Autorize no Instagram</h3>
+          <ul>
+            <li>Clique no link e confira se o endereço começa com <strong>instagram.com</strong>.</li>
+            <li>Entre com o login do Instagram.</li>
+            <li>Revise as três permissões que aparecem e clique em <strong>Permitir</strong>:</li>
+          </ul>
+          <ul class="perms">
+            <li><strong>Informações básicas do perfil</strong>: nome, foto e número de seguidores</li>
+            <li><strong>Publicar conteúdo</strong>: posts e Reels, só com o seu ok</li>
+            <li><strong>Ver métricas</strong>: alcance, salvamentos, retenção e público</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <span class="num" aria-hidden="true">4</span>
+        <div class="step-body">
+          <h3>Confirme na conversa</h3>
+          <p>Volte ao Claude e escreva <strong>"pronto"</strong>. Ele confere se a sua conta aparece como conectada e já pode trazer as primeiras métricas.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>O que muda depois de conectar</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>O Claude faz com você</th><th>Continua no app do Instagram</th></tr></thead>
+        <tbody>
+          <tr><td>Analisa alcance, salvamentos e retenção dos Reels</td><td>Editar bio e link da bio</td></tr>
+          <tr><td>Mostra quem é o seu público (idade, cidade)</td><td>Fixar ou desafixar posts</td></tr>
+          <tr><td>Lê os comentários e resume o que as pessoas pedem</td><td>Stories e destaques</td></tr>
+          <tr><td>Publica Reels e posts após a sua aprovação</td><td>Editar ou apagar posts já publicados</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="box safe">
+    <h2>Regras de segurança</h2>
+    <ul>
+      <li>Nunca digite a senha do Instagram na conversa. O login acontece só na página do Instagram.</li>
+      <li>O Claude não publica nada sem perguntar antes.</li>
+      <li>Para desconectar quando quiser: no Instagram, <span class="path">Configurações → Permissões do site → Apps e sites → vidIQ → Remover</span>.</li>
+    </ul>
+  </div>
+
+  <div class="box warn">
+    <p><strong>Perfil médico:</strong> o conteúdo publicado segue sendo sua responsabilidade. Revise cada post com as normas do CFM sobre publicidade médica antes de aprovar.</p>
+  </div>
+
+  <footer>
+    <strong>Mentoria LIFE — Essencial em Fluxo</strong> · Dra. Milena Teles · EssencIA Médica<br>
+    Medicina com excelência. Vida com essência.
+  </footer>
+</div>
+
+<script>
+(function () {
+  var btn = document.getElementById('copy-btn');
+  var code = document.getElementById('prompt-text');
+  btn.addEventListener('click', function () {
+    var text = code.textContent;
+    function selectFallback() {
+      var r = document.createRange(); r.selectNodeContents(code);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Selecionado';
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () {
+        btn.textContent = 'Copiado';
+        setTimeout(function () { btn.textContent = 'Copiar'; }, 1800);
+      }, selectFallback);
+    } catch (e) { selectFallback(); }
+  });
+})();
+</script>
